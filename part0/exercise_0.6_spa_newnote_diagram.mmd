@@ -1,0 +1,12 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note right of browser: User opened the SPA webpage, and clicked on save
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa containing the new note as JSON data
+    activate server
+    server-->>browser: status code 201
+    deactivate server
+
+    Note right of browser: Executes the JavaScript code that was fetched earlier thus re-rendering the webpage with the new note without fetching a new html file from the server
