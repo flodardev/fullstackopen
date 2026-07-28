@@ -1,0 +1,13 @@
+button {
+  margin: 10px;
+}
+
+table {
+  border: 2px black solid;
+  justify-self: center;
+}
+
+th, td {
+  padding: 15px 20px;
+  text-align: left; 
+}
