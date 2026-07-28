@@ -18,6 +18,7 @@ const App = () => {
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(anecdotesVotesArray)
   const [highestVoteIndex, setIndex] = useState(0)
+  const [highestVoteCount, setHighestVote] = useState(0)
 
   const nextAnecdote = () => {
     let generateNewNumber = Math.floor(Math.random() * anecdotes.length)
@@ -32,6 +33,8 @@ const App = () => {
   const getAnecdoteMostVotes = (copy) => {
     const highestVoteCount = Math.max(...copy)
     const indexOfHighestVoteCount = copy.indexOf(highestVoteCount)
+
+    setHighestVote(highestVoteCount)
 
     return indexOfHighestVoteCount
   }  
@@ -61,10 +64,7 @@ const App = () => {
       </div>
 
       <h1>Anecdote with the most votes</h1>
-      <div className="anecdotes">
-        {anecdotes[highestVoteIndex]}
-        <p>Vote count: {votes[highestVoteIndex]}</p>
-      </div>
+      <AnecdoteHighestVoteParagraph anecdotes={anecdotes} highestVoteIndex={highestVoteIndex} votes={votes} count={highestVoteCount}/>
     </div>
   )
 }
@@ -79,6 +79,18 @@ const NextAnecdoteButton = ({onClick}) => {
 const AnecdoteVoteButton = ({onClick}) => {
   return (
       <button onClick={onClick}>Vote</button>
+  )
+}
+
+const AnecdoteHighestVoteParagraph = ({anecdotes, highestVoteIndex, votes, count}) => {
+  if (!count) {
+    return <p>No votes yet</p>
+  }
+  return (
+    <div className="anecdotes">
+      {anecdotes[highestVoteIndex]}
+      <p>Vote count: {votes[highestVoteIndex]}</p>      
+    </div>
   )
 }
 
