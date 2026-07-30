@@ -1,16 +1,25 @@
-import { useState } from 'react'
-import phonebookData from './data'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Numbers from "./components/Numbers"
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import "./App.css"
 
 const App = () => {
-  const [persons, setPersons] = useState(phonebookData) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState("")
   const [newFilter, setNewFilter] = useState("")
   const [filteredPersons, setFilteredPersons] = useState(persons)
+
+  // axios to db.json
+  useEffect(() => {
+    axios
+    .get("http://localhost:3001/persons")
+    .then (response => {
+      setPersons(response.data)
+    })
+  }, [])
 
   // handle form submission
   const handleForm = (event) => {
