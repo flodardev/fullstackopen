@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import phonebookData from './data'
+import Numbers from "./components/Numbers"
 import "./App.css"
 
 const App = () => {
@@ -10,20 +11,30 @@ const App = () => {
   const handleForm = (event) => {
     event.preventDefault()
 
-    const personObject = {
-      id: persons.length + 1,
-      name: newName,
+    // reject copy submissions
+    if (
+      persons.map(person => person.name)
+      .includes(newName)
+    ) {
+      alert(`${newName} already exists!`)
+      setNewName("")
+      console.log("test")
+    } else {
+      // push to the list
+      const personObject = {
+        id: persons.length + 1,
+        name: newName,
+      }
+
+      setPersons(persons.concat(personObject))
+      console.log(persons)
+
+      setNewName("")
     }
-
-    setPersons(persons.concat(personObject))
-    console.log(persons)
-
-    setNewName("")
   }
 
   // handle name input
   const handleNewName = (event) => {
-    //console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -39,11 +50,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <div>
-        <ul>
-          {persons.map(person => <li key={person.id}>{person.name}</li>)}
-        </ul>
-      </div>
+      <Numbers persons={persons}/>
     </div>
   )
 }
