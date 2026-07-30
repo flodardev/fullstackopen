@@ -34,7 +34,6 @@ const App = () => {
         <div>
           name: <input onChange={handleNewName} value={newName}/>
         </div>
-        <div>debug: {newName}</div>
         <div>
           <button type="submit">add</button>
         </div>
