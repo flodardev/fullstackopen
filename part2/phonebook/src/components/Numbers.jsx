@@ -1,21 +1,14 @@
-const Numbers = ({persons, filteredPersons, newFilter}) => {
-
-    if (newFilter) {
-        return (
-            <div>
-                <ul>
-                    {filteredPersons.map(person => <li key={person.id}>{person.name} | {person.number}</li>)}
-                </ul>
-        </div>
-        )
-    }
-
+const Numbers = ({persons, filteredPersons, newFilter, handleDeleteEvent}) => {
     return (
+        <Number persons={!newFilter ? persons : filteredPersons} handleDeleteEvent={handleDeleteEvent}/>
+    )
+}
 
-
+const Number = ({persons, handleDeleteEvent}) => {
+    return (
         <div>
             <ul>
-                {persons.map(person => <li key={person.id}>{person.name} | {person.number}</li>)}
+                {persons.map(person => <li key={person.id}>{person.name} | {person.number} | <button onClick={() => handleDeleteEvent(person.id)}>delete</button></li>)}
             </ul>
         </div>
     )

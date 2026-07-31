@@ -42,9 +42,9 @@ const App = () => {
 
       // update db server
       numberService.create(personObject)
-        .then(reponse => {
+        .then(response => {
           // update state
-          setPersons(persons.concat(personObject))
+          setPersons(persons.concat(response))
         })
         .catch(error => alert("error creating new person in db"))
 
@@ -74,13 +74,23 @@ const App = () => {
 
   }
 
+  // handle delete btn event
+  const handleDeleteEvent = (id) => {
+    console.log(`number.id = ${id} delete btn clicked`)
+    numberService.deleteNumber(id)
+      .then(response => {
+        // update state
+        setPersons(persons.filter(person => person.id !== response.id))
+      })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
       <PersonForm handleForm={handleForm} handleNewName={handleNewName} newName={newName} handleNewNumber={handleNewNumber} newNumber={newNumber}/>
       <h2>Numbers</h2>
       <Filter handleFilterChange={handleFilterChange}/>
-      <Numbers persons={persons} filteredPersons={filteredPersons} newFilter={newFilter}/>
+      <Numbers persons={persons} filteredPersons={filteredPersons} newFilter={newFilter} handleDeleteEvent={handleDeleteEvent}/>
     </div>
   )
 }
