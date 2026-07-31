@@ -29,11 +29,23 @@ const App = () => {
       persons.map(person => person.name.toLowerCase())
       .includes(newName.toLowerCase())
     ) {
+
       // alert user name already exist
-      alert(`${newName} already exists!`)
+      if (confirm(`${newName} is already in the phonebook. Replace the number with a new one?`)) {
+
+        const oldPersonObject = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
+        const updatedPersonObject = {...oldPersonObject, number: newNumber}
+
+        numberService.updateNumber(oldPersonObject.id, updatedPersonObject)
+          .then(response => setPersons(persons.map(person => person.id === response.id ? updatedPersonObject : person )))
+          .catch(error => alert("Error in updating number"))
+      }
+
       setNewName("")
+      setNewNumber("")
+
     } else {
-      // push to the list
+
       const personObject = {
         id: String(persons.length + 1),
         name: newName,
@@ -75,13 +87,17 @@ const App = () => {
   }
 
   // handle delete btn event
-  const handleDeleteEvent = (id) => {
-    console.log(`number.id = ${id} delete btn clicked`)
-    numberService.deleteNumber(id)
-      .then(response => {
-        // update state
-        setPersons(persons.filter(person => person.id !== response.id))
-      })
+  const handleDeleteEvent = (id, name) => {
+
+    if (confirm(`Delete ${name} ?`)) {
+      numberService.deleteNumber(id)
+        .then(response => {
+          // update state
+          setPersons(persons.filter(person => person.id !== response.id))
+        })
+        .catch(error => alert("Error in deleting person"))
+    }
+
   }
 
   return (
