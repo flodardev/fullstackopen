@@ -4,6 +4,8 @@ import Numbers from "./components/Numbers"
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Notification from "./components/Notification"
+import DeleteNotification from './components/DeleteNotification'
+import ErrorNotification from './components/ErrorNotification'
 import numberService from "./services/numbers"
 import "./App.css"
 
@@ -14,6 +16,8 @@ const App = () => {
   const [newFilter, setNewFilter] = useState("")
   const [filteredPersons, setFilteredPersons] = useState(persons)
   const [notificationMessage, setNotificationMessage] = useState({newPerson: null, updatePerson: null})
+  const [deleteNotification, setDeleteNotification] = useState(null)
+  const [errorMessage, setErrorMessage] = useState({name: null, statusCode: null})
 
   // axios to db.json
   useEffect(() => {
@@ -49,7 +53,15 @@ const App = () => {
             }, 3000)
 
           })
-          .catch(error => alert("Error in updating number"))
+          .catch(error => {
+            // notify user error in updating phone number
+            const statusCode = error.response.status
+
+            setErrorMessage({name: oldPersonObject.name, statusCode: statusCode})
+            setTimeout(()=>{
+              setErrorMessage({name: null, statusCode: null})
+            }, 5000)
+          })
       }
 
       setNewName("")
@@ -113,8 +125,14 @@ const App = () => {
         .then(response => {
           // update state
           setPersons(persons.filter(person => person.id !== response.id))
+
+          // alert user delete was succesful
+          setDeleteNotification(name)
+          setTimeout(() => {
+            setDeleteNotification(null)
+          }, 3000)
         })
-        .catch(error => alert("Error in deleting person"))
+        .catch(error => {alert("Error in deleting person")})
     }
 
   }
@@ -123,6 +141,8 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification notificationMessage={notificationMessage}/>
+      <DeleteNotification deleteNotification={deleteNotification}/>
+      <ErrorNotification errorMessage={errorMessage}/>
       <PersonForm handleForm={handleForm} handleNewName={handleNewName} newName={newName} handleNewNumber={handleNewNumber} newNumber={newNumber}/>
       <h2>Numbers</h2>
       <Filter handleFilterChange={handleFilterChange}/>

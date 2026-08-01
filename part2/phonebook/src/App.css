@@ -10,3 +10,19 @@ ul {
     padding-left: 1rem;
     margin-bottom: 1rem;
 }
+
+.deleteMessage {
+    border: 5px solid yellow;
+    border-radius: 10px;
+    background-color: lightyellow;
+    padding-left: 1rem;
+    margin-bottom: 1rem; 
+}
+
+.errorUpdatingMessage {
+    border: 5px solid red;
+    border-radius: 10px;
+    background-color: lightcoral;
+    padding-left: 1rem;
+    margin-bottom: 1rem;     
+}
