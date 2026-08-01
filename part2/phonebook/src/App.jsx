@@ -3,6 +3,7 @@ import axios from 'axios'
 import Numbers from "./components/Numbers"
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from "./components/Notification"
 import numberService from "./services/numbers"
 import "./App.css"
 
@@ -12,6 +13,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [newFilter, setNewFilter] = useState("")
   const [filteredPersons, setFilteredPersons] = useState(persons)
+  const [notificationMessage, setNotificationMessage] = useState({newPerson: null, updatePerson: null})
 
   // axios to db.json
   useEffect(() => {
@@ -37,7 +39,16 @@ const App = () => {
         const updatedPersonObject = {...oldPersonObject, number: newNumber}
 
         numberService.updateNumber(oldPersonObject.id, updatedPersonObject)
-          .then(response => setPersons(persons.map(person => person.id === response.id ? updatedPersonObject : person )))
+          .then(response => {
+            setPersons(persons.map(person => person.id === response.id ? updatedPersonObject : person ))
+
+            // notify user person number was updated
+            setNotificationMessage({updatePerson: updatedPersonObject.name, newPerson: null})
+            setTimeout(() => {
+              setNotificationMessage({updatePerson: null, newPerson: null})
+            }, 3000)
+
+          })
           .catch(error => alert("Error in updating number"))
       }
 
@@ -46,6 +57,7 @@ const App = () => {
 
     } else {
 
+      // add the new person to the phonebook
       const personObject = {
         id: String(persons.length + 1),
         name: newName,
@@ -57,6 +69,13 @@ const App = () => {
         .then(response => {
           // update state
           setPersons(persons.concat(response))
+
+          // notify user person is added to phonebook
+          setNotificationMessage({updatePerson: null, newPerson: response.name})
+          setTimeout(() => {
+            setNotificationMessage({updatePerson: null, newPerson: null})
+          }, 3000)
+
         })
         .catch(error => alert("error creating new person in db"))
 
@@ -103,6 +122,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notificationMessage={notificationMessage}/>
       <PersonForm handleForm={handleForm} handleNewName={handleNewName} newName={newName} handleNewNumber={handleNewNumber} newNumber={newNumber}/>
       <h2>Numbers</h2>
       <Filter handleFilterChange={handleFilterChange}/>
