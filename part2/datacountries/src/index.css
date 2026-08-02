@@ -1,0 +1,28 @@
+.main {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+h1 {
+    font-style: italic;
+}
+
+.flagImg {
+    width: 50%;
+}
+
+.countryInfo {
+    display: flex;
+    flex-flow: column;
+    width:75%
+}
+
+.listItem {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    gap: 1rem;
+}
