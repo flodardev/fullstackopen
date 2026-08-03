@@ -26,17 +26,33 @@ const persons = [
 ]
 
 // ROUTES
+
+// get all
 app.get("/api/persons", (request, response) => {
     if (persons) {
         response.json(persons)
     } else {
         response.status(404).json({
             status: 404,
-            error: "persons is missing from the server"
+            error: "no data in the server"
         })
     }
 })
 
+// get one
+app.get("/api/persons/:id", (request, response) => {
+    const id = request.params.id
+    const person = persons.find(person => person.id === id)
+
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end();
+    }
+
+})
+
+// get info
 app.get("/info", (request, response) => {
 
     const numberOfPersons = persons.length
