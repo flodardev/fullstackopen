@@ -1,6 +1,7 @@
 const express = require("express")
 
 const app = express();
+app.use(express.json())
 
 let persons = [
     { 
@@ -23,12 +24,22 @@ let persons = [
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122"
     },
-    { 
-      "id": "5",
-      "name": "Bubu", 
-      "number": "39-23-6423122"
-    }
 ]
+
+// Functions
+const generateId = () => {
+    const ids = persons.map(person => Number(person.id))
+    const max = 100
+    const min = 1
+    let newId = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    while(ids.includes(newId))
+    {
+        newId = Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    return newId
+}
 
 // ROUTES
 
@@ -63,6 +74,19 @@ app.delete("/api/persons/:id", (request, response) => {
     persons = persons.filter(person => person.id !== id)
 
     response.status(204).end()
+})
+
+// add person
+app.post("/api/persons", (request, response) => {
+    const person = request.body
+
+    const personObject = {
+        id: String(generateId()),
+        name: person.name,
+        number: String(person.number),
+    }
+    persons = persons.concat(personObject)
+    response.json(personObject)
 })
 
 // get info
