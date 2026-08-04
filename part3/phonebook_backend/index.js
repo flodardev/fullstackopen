@@ -1,7 +1,6 @@
 const express = require("express")
 
 const app = express();
-app.use(express.json())
 
 let persons = [
     { 
@@ -40,6 +39,19 @@ const generateId = () => {
 
     return newId
 }
+
+// Middleware
+const requestLogger = (request, response, next) => {
+    console.log("Method:", request.method)
+    console.log("Path:  ", request.path)
+    console.log("Body:  ", request.body)
+    console.log("---")
+    next()
+}
+
+
+app.use(express.json())
+app.use(requestLogger)
 
 // ROUTES
 
@@ -80,6 +92,21 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
     const person = request.body
 
+    // send an error if name or number is missing
+    if (!person.name || !person.number) {
+        return response.status(400).json({
+            error: "name or number is missing"
+        })
+    }
+
+
+    // send an error if a name already exists, case insensitive
+    if (persons.map(person => person.name.toLowerCase()).includes(person.name.toLowerCase())) {
+        return response.status(400).json({
+            error: "name already exists"
+        })
+    }
+
     const personObject = {
         id: String(generateId()),
         name: person.name,
@@ -100,6 +127,14 @@ app.get("/info", (request, response) => {
         <p>${dateNow}</p>
         `)
 })
+
+// Middleware
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({
+        error: "unknown endpoint"
+    })
+}
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
