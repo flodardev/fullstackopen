@@ -1,6 +1,11 @@
 const express = require("express")
+const morgan = require("morgan")
+
 
 const app = express();
+
+app.use(express.json())
+app.use(morgan("tiny"))
 
 let persons = [
     { 
@@ -41,18 +46,17 @@ const generateId = () => {
 }
 
 // Middleware
-const requestLogger = (request, response, next) => {
-    console.log("Method:", request.method)
-    console.log("Path:  ", request.path)
-    console.log("Body:  ", request.body)
-    console.log("---")
-    next()
-}
+// const requestLogger = (request, response, next) => {
+//     console.log("Method:", request.method)
+//     console.log("Path:  ", request.path)
+//     console.log("Body:  ", request.body)
+//     console.log("---")
+//     next()
+// }
 
 
-app.use(express.json())
-app.use(requestLogger)
 
+// app.use(requestLogger)
 // ROUTES
 
 // get all
