@@ -124,8 +124,8 @@ const App = () => {
       numberService.deleteNumber(id)
         .then(response => {
           // update state
-          setPersons(persons.filter(person => person.id !== response.id))
-
+          setPersons(persons.filter(person => person.id !== id))
+          console.log(response)
           // alert user delete was succesful
           setDeleteNotification(name)
           setTimeout(() => {
